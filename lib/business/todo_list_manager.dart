@@ -1,4 +1,5 @@
 import 'package:assignment_todo/business/todo_item.dart';
+import 'package:assignment_todo/utils/sort_values.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -10,13 +11,16 @@ class TodoListManager extends ChangeNotifier {
   }
 
   Map<int, TodoItem> _todoMap = {};
+  SortValues _currentSorting = SortValues.defaultState;
 
   Map<int, TodoItem> get todoList => _todoMap;
+
+  SortValues get currentSorting => _currentSorting;
 
   addTodoItem(
       String todo, String description, Status status, DateTime deadline) {
     TodoItem item = TodoItem(
-        id: TodoItem.count++,
+        id: DateTime.now().millisecondsSinceEpoch,
         description: description,
         todo: todo,
         deadline: deadline,
@@ -44,10 +48,43 @@ class TodoListManager extends ChangeNotifier {
     savePreferences();
   }
 
-  sortTodosByDeadline() {
-    _todoMap = Map.fromEntries(_todoMap.entries.toList()
-      ..sort((a, b) => a.value.deadline.compareTo(b.value.deadline)));
+  sortTodosByTyp(SortValues value) {
+    switch (value) {
+      case SortValues.todo:
+        _todoMap = Map.fromEntries(_todoMap.entries.toList()
+          ..sort((a, b) => a.value.todo.compareTo(b.value.todo)));
+      case SortValues.deadline:
+        _todoMap = Map.fromEntries(_todoMap.entries.toList()
+          ..sort((a, b) {
+            if (a.value.status == Status.done &&
+                b.value.status != Status.done) {
+              return 1;
+            }
+            if (b.value.status == Status.done &&
+                a.value.status != Status.done) {
+              return -1;
+            }
+            return a.value.deadline.compareTo(b.value.deadline);
+          }));
+      case SortValues.status:
+        _todoMap = Map.fromEntries(_todoMap.entries.toList()
+          ..sort((a, b) {
+            if (a.value.status == Status.done &&
+                b.value.status != Status.done) {
+              return 1;
+            }
+            if (b.value.status == Status.done &&
+                a.value.status != Status.done) {
+              return -1;
+            }
+            return a.value.status.compareTo(b.value.status);
+          }));
+      case SortValues.defaultState:
+        _todoMap = Map.fromEntries(_todoMap.entries.toList()
+          ..sort((a, b) => a.value.id.compareTo(b.value.id)));
+    }
     notifyListeners();
+    _currentSorting = value;
   }
 
   void savePreferences() async {

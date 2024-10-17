@@ -13,7 +13,7 @@ class TodoList extends StatelessWidget {
     return Expanded(
         child: Consumer<TodoListManager>(
             builder: (context, itemListManager, child) => ListView(
-                padding: const EdgeInsets.only(bottom: 90),
+                padding: const EdgeInsets.only(bottom: 90, top: 10),
                 children: List<Widget>.from(
                     itemListManager.todoList.values.map((todo) {
                   return Container(
@@ -86,7 +86,8 @@ class TodoListDetailed extends StatelessWidget {
                                         size: 14,
                                       ),
                                       Padding(
-                                          padding: EdgeInsets.only(left: 5),
+                                          padding:
+                                              const EdgeInsets.only(left: 5),
                                           child: Text(status.label))
                                     ],
                                   ),
@@ -102,25 +103,21 @@ class TodoListDetailed extends StatelessWidget {
                   ),
                 ),
                 Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Expanded(
-                        flex: 0,
-                        child: Row(
-                          children: [
-                            Text(
-                              "Description:",
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        )),
+                    const Row(children: [
+                      Text(
+                        "Description:",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )
+                    ]),
                     Text(
                       todo.description,
                     )
                   ],
                 ),
                 Padding(
-                    padding: EdgeInsets.only(top: 20),
+                    padding: const EdgeInsets.only(top: 20),
                     child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -147,25 +144,55 @@ class TodoListTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Row(
-        children: [
-          Padding(
-              padding: const EdgeInsets.only(bottom: 5),
-              child: Icon(
-                Icons.circle,
-                size: 14,
-                color: todo.status.color,
-              )),
-          Padding(
-              padding: const EdgeInsets.only(left: 5, bottom: 5),
-              child: Text(
-                todo.status.label,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w300,
-                  fontSize: 14,
+      Padding(
+        padding: const EdgeInsets.only(bottom: 5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.circle,
+                  size: 14,
+                  color: todo.status.color,
                 ),
-              ))
-        ],
+                Padding(
+                    padding: const EdgeInsets.only(left: 5),
+                    child: Text(
+                      todo.status.label,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w300,
+                        fontSize: 14,
+                      ),
+                    ))
+              ],
+            ),
+            todo.status != Status.done
+                ? Row(
+                    children: [
+                      const Text(
+                        "Due in ",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w300, fontSize: 14),
+                      ),
+                      Text(
+                        todo.deadline
+                            .difference(DateTime.now())
+                            .inDays
+                            .toString(),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 14),
+                      ),
+                      const Text(
+                        " days.",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w300, fontSize: 14),
+                      ),
+                    ],
+                  )
+                : Container()
+          ],
+        ),
       ),
       Text(todo.todo,
           style: TextStyle(

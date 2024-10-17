@@ -9,4 +9,8 @@ enum Status {
 
   final String label;
   final Color color;
+
+  int compareTo(Status other) {
+    return this.index.compareTo(other.index);
+  }
 }

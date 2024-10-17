@@ -1,5 +1,8 @@
 import 'package:assignment_todo/business/todo_list_manager.dart';
+import 'package:assignment_todo/presentation/todo_page_headerline.dart';
+import 'package:assignment_todo/utils/sort_values.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../presentation/todo_add_modal.dart';
 import '../presentation/todo_list.dart';
@@ -19,17 +22,36 @@ class TodoApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
             seedColor: Colors.green, brightness: Brightness.dark),
+        splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        hoverColor: Colors.transparent,
+        focusColor: Colors.transparent,
+        dropdownMenuTheme: DropdownMenuThemeData(
+          menuStyle: MenuStyle(
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16), // Rounded corners
+              ),
+            ),
+            padding: MaterialStateProperty.all(
+              const EdgeInsets.all(8.0), // Padding inside the dropdown menu
+            ),
+          ),
+        ),
         useMaterial3: true,
       ),
-      home: const TodoAppPage(title: 'Todo App'),
+      home: TodoAppPage(title: 'Todo App'),
     );
   }
 }
 
 class TodoAppPage extends StatelessWidget {
-  const TodoAppPage({super.key, required this.title});
+  TodoAppPage({super.key, required this.title});
 
   final String title;
+
+  final TextEditingController _controller =
+      TextEditingController(text: "default");
 
   @override
   Widget build(BuildContext context) {
@@ -40,20 +62,12 @@ class TodoAppPage extends StatelessWidget {
         ),
         body: Container(
           margin: const EdgeInsets.all(16),
-          child: Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-            Container(
-                alignment: Alignment.centerLeft,
-                margin: const EdgeInsets.only(bottom: 16),
-                child: const Text(
-                  "Todos:",
-                  style: TextStyle(
-                    backgroundColor: Colors.transparent,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 24,
-                  ),
-                )),
-            const TodoList(),
-          ]),
+          child: const Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                TodoAppHeaderLine(),
+                TodoList(),
+              ]),
         ),
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
