@@ -96,7 +96,7 @@ class TodoListDetailed extends StatelessWidget {
                               onChanged: (Status? status) {
                                 if (status != null) {
                                   itemListManager.changeTodoStatus(
-                                      todo.id, status);
+                                      todo.id!, status);
                                 }
                               }))
                     ],
@@ -126,7 +126,7 @@ class TodoListDetailed extends StatelessWidget {
                                   foregroundColor: Colors.red,
                                   side: const BorderSide(color: Colors.red)),
                               onPressed: () =>
-                                  itemListManager.removeTodoItem(todo.id),
+                                  itemListManager.removeTodoItem(todo.id!),
                               child: const Row(
                                 children: [Icon(Icons.delete), Text("Delete")],
                               ))

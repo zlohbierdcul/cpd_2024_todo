@@ -13,4 +13,17 @@ enum Status {
   int compareTo(Status other) {
     return this.index.compareTo(other.index);
   }
+
+  static Status parse(String statusString) {
+    switch (statusString) {
+      case "Open":
+        return Status.open;
+      case "In Progress":
+        return Status.inProgress;
+      case "Done":
+        return Status.done;
+      default:
+        return Status.open;
+    }
+  }
 }

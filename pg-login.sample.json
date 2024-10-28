@@ -1,0 +1,7 @@
+{
+  "PG_HOST": "10.0.2.2",
+  "PG_PORT": 5432,
+  "PG_DATABASE_NAME": "todo_app",
+  "PG_USERNAME": "postgres",
+  "PG_PASSWORD": "pg_password"
+}

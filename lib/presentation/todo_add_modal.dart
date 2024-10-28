@@ -202,7 +202,6 @@ class TodoAddModalButtons extends StatelessWidget {
                   onPressed: () => {
                     if (formKey.currentState!.validate())
                       {
-                        todoItemManager.loadPreferences(),
                         todoItemManager.addTodoItem(todo, description,
                             Status.open, DateTime.parse(deadline)),
                         Navigator.pop(context),

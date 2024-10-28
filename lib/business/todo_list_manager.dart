@@ -1,13 +1,17 @@
+import 'package:assignment_todo/database/pg_storage_manager.dart';
+import 'package:assignment_todo/database/sqlite-storage-manager.dart';
 import 'package:assignment_todo/business/todo_item.dart';
+import 'package:assignment_todo/database/storage-manager.dart';
 import 'package:assignment_todo/utils/sort_values.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utils/status.dart';
 
 class TodoListManager extends ChangeNotifier {
+  final StorageManager storageManager = PGStorageManager();
+
   TodoListManager() {
-    loadPreferences();
+    _loadInitialData();
   }
 
   Map<int, TodoItem> _todoMap = {};
@@ -18,23 +22,24 @@ class TodoListManager extends ChangeNotifier {
   SortValues get currentSorting => _currentSorting;
 
   addTodoItem(
-      String todo, String description, Status status, DateTime deadline) {
+      String todo, String description, Status status, DateTime deadline) async {
     TodoItem item = TodoItem(
-        id: DateTime.now().millisecondsSinceEpoch,
         description: description,
         todo: todo,
         deadline: deadline,
         status: status);
-    _todoMap[item.id] = item;
+
+    item = await storageManager.addTodo(item);
+
+    _todoMap[item.id!] = item;
 
     notifyListeners();
-    savePreferences();
   }
 
   removeTodoItem(int id) {
     _todoMap.remove(id);
+    storageManager.removeTodo(id);
     notifyListeners();
-    savePreferences();
   }
 
   changeTodoStatus(int id, Status newStatus) {
@@ -43,9 +48,10 @@ class TodoListManager extends ChangeNotifier {
 
     if (item != null) {
       _todoMap[id] = item;
+      storageManager.updateTodo(item);
     }
+
     notifyListeners();
-    savePreferences();
   }
 
   sortTodosByTyp(SortValues value) {
@@ -81,32 +87,16 @@ class TodoListManager extends ChangeNotifier {
           }));
       case SortValues.defaultState:
         _todoMap = Map.fromEntries(_todoMap.entries.toList()
-          ..sort((a, b) => a.value.id.compareTo(b.value.id)));
+          ..sort((a, b) => a.value.id!.compareTo(b.value.id!)));
     }
     notifyListeners();
     _currentSorting = value;
   }
 
-  void savePreferences() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    prefs.setStringList("todolist",
-        _todoMap.values.map((item) => item.parseToString()).toList());
-  }
-
-  void loadPreferences() async {
-    WidgetsFlutterBinding.ensureInitialized();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? itemStringList = prefs.getStringList("todolist");
-    if (itemStringList == null) return;
-    for (String itemString in itemStringList) {
-      try {
-        TodoItem item = TodoItem.parseFromString(itemString);
-        _todoMap[item.id] = item;
-      } catch (e) {
-        print("Parsing failed");
-        continue;
-      }
+  Future<void> _loadInitialData() async {
+    final data = await storageManager.retrieveAllTodos();
+    for (var todo in data) {
+      _todoMap[todo.id!] = todo;
     }
     notifyListeners();
   }

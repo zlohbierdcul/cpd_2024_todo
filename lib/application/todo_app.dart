@@ -1,18 +1,10 @@
-import 'package:assignment_todo/business/todo_list_manager.dart';
 import 'package:assignment_todo/presentation/todo_page_headerline.dart';
-import 'package:assignment_todo/utils/sort_values.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
 import '../presentation/todo_add_modal.dart';
 import '../presentation/todo_list.dart';
 
 class TodoApp extends StatelessWidget {
-  final TodoListManager manager = TodoListManager();
-
-  TodoApp({super.key}) {
-    manager.loadPreferences();
-  }
+  const TodoApp({super.key});
 
   // This widget is the root of your application.
   @override
