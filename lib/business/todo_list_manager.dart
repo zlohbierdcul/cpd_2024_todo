@@ -1,3 +1,4 @@
+import 'package:assignment_todo/database/path_provider_storage_manager.dart';
 import 'package:assignment_todo/database/pg_storage_manager.dart';
 import 'package:assignment_todo/database/sqlite-storage-manager.dart';
 import 'package:assignment_todo/business/todo_item.dart';
@@ -8,7 +9,7 @@ import 'package:flutter/material.dart';
 import '../utils/status.dart';
 
 class TodoListManager extends ChangeNotifier {
-  final StorageManager storageManager = PGStorageManager();
+  final StorageManager storageManager = PathProviderStorageManager();
 
   TodoListManager() {
     _loadInitialData();
