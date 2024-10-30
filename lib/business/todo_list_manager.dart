@@ -1,18 +1,22 @@
 import 'package:assignment_todo/database/path_provider_storage_manager.dart';
 import 'package:assignment_todo/database/pg_storage_manager.dart';
+import 'package:assignment_todo/database/shard_prefs_storage_manager.dart';
 import 'package:assignment_todo/database/sqlite-storage-manager.dart';
 import 'package:assignment_todo/business/todo_item.dart';
 import 'package:assignment_todo/database/storage-manager.dart';
 import 'package:assignment_todo/utils/sort_values.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 import '../utils/status.dart';
 
 class TodoListManager extends ChangeNotifier {
-  final StorageManager storageManager = PathProviderStorageManager();
+  final StorageManager storageManager =
+      kIsWeb ? ShardPrefsStorageManager() : PathProviderStorageManager();
 
   TodoListManager() {
     _loadInitialData();
+    print(storageManager);
   }
 
   Map<int, TodoItem> _todoMap = {};

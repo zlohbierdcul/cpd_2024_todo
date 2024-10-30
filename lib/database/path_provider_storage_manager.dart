@@ -35,8 +35,6 @@ class PathProviderStorageManager implements StorageManager {
     todo.id = DateTime.now().millisecondsSinceEpoch;
     todoList.add(todo);
 
-    todoFile.deleteSync();
-    todoFile.createSync();
     todoFile.writeAsString(jsonEncode(todoList));
 
     return todo;
@@ -54,8 +52,6 @@ class PathProviderStorageManager implements StorageManager {
 
     todoList.removeWhere((todo) => todo.id == id);
 
-    todoFile.deleteSync();
-    todoFile.createSync();
     todoFile.writeAsString(jsonEncode(todoList));
   }
 
@@ -91,8 +87,6 @@ class PathProviderStorageManager implements StorageManager {
 
     todoList.replaceRange(todoToUpdateIndex, todoToUpdateIndex, [todoToUpdate]);
 
-    todoFile.deleteSync();
-    todoFile.createSync();
     todoFile.writeAsString(jsonEncode(todoList));
   }
 }
