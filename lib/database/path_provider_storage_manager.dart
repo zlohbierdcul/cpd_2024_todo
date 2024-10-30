@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:assignment_todo/business/todo_item.dart';
 import 'package:assignment_todo/database/storage-manager.dart';
-import 'package:assignment_todo/utils/status.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PathProviderStorageManager implements StorageManager {
@@ -59,8 +58,6 @@ class PathProviderStorageManager implements StorageManager {
   Future<List<TodoItem>> retrieveAllTodos() async {
     File todoFile = await _localFile;
     final String fileContent = await todoFile.readAsString();
-
-    print(fileContent);
 
     final List<dynamic> fileJson = jsonDecode(fileContent);
 
