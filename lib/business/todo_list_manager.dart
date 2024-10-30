@@ -12,7 +12,7 @@ import '../utils/status.dart';
 
 class TodoListManager extends ChangeNotifier {
   final StorageManager storageManager =
-      kIsWeb ? ShardPrefsStorageManager() : PathProviderStorageManager();
+      kIsWeb ? SharedPrefsStorageManager() : PathProviderStorageManager();
 
   TodoListManager() {
     _loadInitialData();

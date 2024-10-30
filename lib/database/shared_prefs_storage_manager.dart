@@ -5,7 +5,7 @@ import 'package:assignment_todo/business/todo_item.dart';
 import 'package:assignment_todo/database/storage-manager.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ShardPrefsStorageManager implements StorageManager {
+class SharedPrefsStorageManager implements StorageManager {
   final todoKey = "todos";
 
   Future<SharedPreferences> get _prefs async {
